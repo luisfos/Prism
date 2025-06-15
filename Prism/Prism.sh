@@ -2,4 +2,4 @@
 
 PRISM_ROOT="$(dirname "$(readlink -f "$0")")"
 
-python $PRISM_ROOT/Scripts/PrismTray.py
+python3 $PRISM_ROOT/Scripts/PrismTray.py

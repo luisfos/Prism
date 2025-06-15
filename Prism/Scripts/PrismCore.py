@@ -380,6 +380,8 @@ class PrismCore:
             path = os.path.join(os.environ["PROGRAMDATA"], "Prism2")
         elif platform.system() == "Linux":
             path = "/var/lib/Prism2"
+        elif platform.system() == "Darwin":
+            path = os.path.join(os.environ["HOME"], "Library", "Application Support", "Prism2")
 
         return path
 
