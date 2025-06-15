@@ -56,7 +56,9 @@ startEnv = os.environ.copy()
 # check if python 2 or python 3 is used
 if sys.version[0] == "3":
     pVersion = 3
-    if sys.version_info.minor == 11:
+    if sys.version_info.minor == 12:
+        pyLibs = "Python312"
+    elif sys.version_info.minor == 11:
         pyLibs = "Python311"
     elif sys.version_info.minor == 10:
         pyLibs = "Python310"
@@ -71,14 +73,18 @@ prismLibs = os.getenv("PRISM_LIBS")
 if not prismLibs:
     prismLibs = prismRoot
 
-if not os.path.exists(os.path.join(prismLibs, "PythonLibs")) and os.getenv("PRISM_NO_LIBS") != "1":
+if (
+    not os.path.exists(os.path.join(prismLibs, "PythonLibs"))
+    and os.getenv("PRISM_NO_LIBS") != "1"
+    and platform.system() == "Windows"
+):
     raise Exception('Prism: Couldn\'t find libraries. Set "PRISM_LIBS" to fix this.')
 
 scriptPath = os.path.join(prismRoot, "Scripts")
 if scriptPath not in sys.path:
     sys.path.append(scriptPath)
 
-pyLibPath = os.path.join(prismLibs, "PythonLibs", pyLibs)
+pyLibPath = os.path.join(prismLibs, "PythonLibs")
 cpLibs = os.path.join(prismLibs, "PythonLibs", "CrossPlatform")
 
 if cpLibs not in sys.path:
@@ -179,7 +185,7 @@ class PrismCore:
 
         try:
             # set some general variables
-            self.version = "v2.0.10"
+            self.version = "v2.0.10-linux-1"
             self.requiredLibraries = "v2.0.0"
             self.core = self
             self.preferredExtension = os.getenv("PRISM_CONFIG_EXTENSION", ".json")
@@ -374,6 +380,8 @@ class PrismCore:
             path = os.path.join(os.environ["PROGRAMDATA"], "Prism2")
         elif platform.system() == "Linux":
             path = "/var/lib/Prism2"
+        elif platform.system() == "Darwin":
+            path = os.path.join(os.environ["HOME"], "Library", "Application Support", "Prism2")
 
         return path
 

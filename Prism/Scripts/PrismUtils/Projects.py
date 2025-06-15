@@ -41,7 +41,8 @@ import time
 import glob
 import re
 from collections import OrderedDict
-from distutils.dir_util import copy_tree
+from pathlib import Path
+# from distutils.dir_util import copy_tree
 
 from qtpy.QtCore import *
 from qtpy.QtGui import *
@@ -51,6 +52,20 @@ from PrismUtils.Decorators import err_catcher
 
 
 logger = logging.getLogger(__name__)
+
+
+def copy_tree(src_dir: str, dst_dir: str):
+    src = Path(src_dir)
+    dst = Path(dst_dir)
+    dst.mkdir(parents=True, exist_ok=True)
+
+    for item in src.iterdir():
+        d = dst / item.name
+        if item.is_dir():
+            shutil.copytree(item, d, dirs_exist_ok=True)
+        else:
+            shutil.copy2(item, d)
+
 
 
 class Projects(object):
